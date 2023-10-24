@@ -44,4 +44,6 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.9")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.github.siyamed:android-shape-imageview:0.9.+@aar")
+    implementation("androidx.room:room-runtime:2.6.0")
+    annotationProcessor("androidx.room:room-compiler:2.6.0")
 }

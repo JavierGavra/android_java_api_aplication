@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -26,6 +27,8 @@ import com.jarganaya.fetchapiaplication.adapter.MovieListAdapter;
 import com.jarganaya.fetchapiaplication.model.MovieDetailModel;
 import com.jarganaya.fetchapiaplication.model.MovieListModel;
 import com.jarganaya.fetchapiaplication.model.MovieVideoModel;
+import com.jarganaya.fetchapiaplication.room.AppDatabase;
+import com.jarganaya.fetchapiaplication.room.entity.FavoriteMovieEntity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,6 +41,7 @@ public class DetailActivity extends AppCompatActivity {
     private MovieDetailModel movieDetailModel;
     private MovieVideoModel movieVideoModel;
     private final ArrayList<MovieListModel> similarMovieList = new ArrayList<>();
+    private AppDatabase db;
     private RelativeLayout loadingScreen;
     private ImageView ivBackButton, ivFavoriteButton, ivPlayTrailerButton, ivBackdrop;
     private TextView tvTitle, tvOriginalTitle, tvRuntime, tvVoteAverage, tvReleaseDate, tvStatus, tvSynopsis;
@@ -52,16 +56,15 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_detail);
-        initComponent();
-        setFavorite();
-
+        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "app-database").allowMainThreadQueries().build();
+        initComponents();
         getApi();
+
+
         ivBackButton.setOnClickListener(v -> finish());
-        ivFavoriteButton.setOnClickListener(v -> {
-            Toast.makeText(this, Long.toString(movieDetailModel.getId()), Toast.LENGTH_SHORT).show();
-            isFavorite = !isFavorite;
-            setFavorite();
-        });
+
+        ivFavoriteButton.setOnClickListener(v -> setFavorite());
+
         ivPlayTrailerButton.setOnClickListener(v -> {
             if (movieVideoModel == null) {
                 Toast.makeText(this, "No trailer in this movie", Toast.LENGTH_SHORT).show();
@@ -72,7 +75,7 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    void initComponent() {
+    void initComponents() {
         ivBackButton = findViewById(R.id.iv_back_button);
         ivFavoriteButton = findViewById(R.id.iv_favorite_button);
         ivPlayTrailerButton = findViewById(R.id.iv_play_trailer_button);
@@ -164,6 +167,16 @@ public class DetailActivity extends AppCompatActivity {
         tvStatus.setText(movieDetailModel.getStatus());
         tvSynopsis.setText(movieDetailModel.getOverview());
 
+        // Cek apakah film sudah ada di favorit
+        ArrayList<FavoriteMovieEntity> favoriteMovieEntities = (ArrayList<FavoriteMovieEntity>) db.favoriteMovieDao().getAll();
+        for (int i = 0; i < favoriteMovieEntities.size(); i++) {
+            if (favoriteMovieEntities.get(i).movieId == movieDetailModel.getId()) {
+                isFavorite = true;
+                ivFavoriteButton.setImageResource(R.drawable.ic_detail_favorite);
+                break;
+            }
+        }
+
         MovieListAdapter similarMovieListAdapter = new MovieListAdapter(similarMovieList);
         similarMovieListAdapter.setOnItemClickCallback(this::showDetail);
         rvSimilarMovie.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -177,6 +190,22 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     void setFavorite() {
+        isFavorite = !isFavorite;
+        if (isFavorite) {
+            FavoriteMovieEntity favoriteMovie = new FavoriteMovieEntity(
+                    (int) movieDetailModel.getId(),
+                    movieDetailModel.getTitle(),
+                    movieDetailModel.getPoster_path(),
+                    movieDetailModel.getRelease_date(),
+                    Float.toString(movieDetailModel.getVote_average())
+            );
+            db.favoriteMovieDao().insert(favoriteMovie);
+        } else {
+            db.favoriteMovieDao().delete((int)movieDetailModel.getId());
+        }
+
         ivFavoriteButton.setImageResource(isFavorite? R.drawable.ic_detail_favorite : R.drawable.ic_detail_favorite_border);
+        Toast.makeText(this, isFavorite? "Success add to favorite" : "Remove from favorite", Toast.LENGTH_SHORT).show();
+        Log.d("App Database", "data : " + db.favoriteMovieDao().getAll().size());
     }
 }

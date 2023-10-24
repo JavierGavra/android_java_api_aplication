@@ -19,14 +19,30 @@
             android:gravity="center_vertical"
             android:background="#2B2B2B">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="JMDB"
-                android:textColor="@color/text_color"
-                android:textSize="20sp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:text="JMDB"
+                    android:textColor="@color/text_color"
+                    android:textSize="20sp" />
+
+                <ImageButton
+                    android:id="@+id/ib_favorite_page"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:background="#00000000"
+                    android:src="@drawable/ic_main_favorite"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="Favorite" />
+            </RelativeLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
         <ScrollView
@@ -123,7 +139,7 @@
         </ScrollView>
     </LinearLayout>
 
-<!--  Loading page  -->
+    <!--  Loading page  -->
     <RelativeLayout
         android:id="@+id/loading_screen"
         android:layout_width="match_parent"

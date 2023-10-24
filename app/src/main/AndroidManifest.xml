@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,9 +15,12 @@
         android:theme="@style/Theme.FetchApiAplication"
         tools:targetApi="31">
         <activity
+            android:name=".activity.FavoriteActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.DetailActivity"
             android:exported="false"
-            android:theme="@style/Theme.FetchApiAplication.DetailActivity"/>
+            android:theme="@style/Theme.FetchApiAplication.DetailActivity" />
         <activity
             android:name=".activity.MainActivity"
             android:exported="true">

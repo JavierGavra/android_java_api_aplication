@@ -1,30 +1,18 @@
 package com.jarganaya.fetchapiaplication.activity;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.WindowCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
@@ -33,7 +21,6 @@ import com.jarganaya.fetchapiaplication.adapter.MovieListAdapter;
 import com.jarganaya.fetchapiaplication.model.MovieListModel;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -41,6 +28,7 @@ public class MainActivity extends AppCompatActivity{
     private final ArrayList<MovieListModel> popularMovieList = new ArrayList<>();
     private final ArrayList<MovieListModel> upcomingMovieList = new ArrayList<>();
     private final ArrayList<MovieListModel> topRatedMovieList = new ArrayList<>();
+    private ImageButton ibFavoritePage;
     private RecyclerView rvPopularMovie, rvUpcomingMovie, rvTopRatedMovie;
     private RelativeLayout loadingScreen;
     private RequestQueue requestQueue;
@@ -50,11 +38,17 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initComponent();
+        initComponents();
         getApi();
+
+        ibFavoritePage.setOnClickListener(v -> {
+            Intent favoriteIntent = new Intent(MainActivity.this, FavoriteActivity.class);
+            startActivity(favoriteIntent);
+        });
     }
 
-    void initComponent() {
+    void initComponents() {
+        ibFavoritePage = findViewById(R.id.ib_favorite_page);
         rvPopularMovie = findViewById(R.id.rv_popular_movie);
         rvUpcomingMovie = findViewById(R.id.rv_upcoming_movie);
         rvTopRatedMovie = findViewById(R.id.rv_top_rated_movie);

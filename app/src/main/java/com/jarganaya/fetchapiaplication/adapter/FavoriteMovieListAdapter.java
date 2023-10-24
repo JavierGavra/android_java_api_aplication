@@ -1,6 +1,5 @@
 package com.jarganaya.fetchapiaplication.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.jarganaya.fetchapiaplication.R;
 import com.jarganaya.fetchapiaplication.model.MovieListModel;
+import com.jarganaya.fetchapiaplication.room.entity.FavoriteMovieEntity;
 
 import java.util.ArrayList;
 
-public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder> {
-    private ArrayList<MovieListModel> movieListModels;
+public class FavoriteMovieListAdapter extends RecyclerView.Adapter<FavoriteMovieListAdapter.ViewHolder> {
+    private ArrayList<FavoriteMovieEntity> favoriteMovieEntities;
     private OnItemClickCallback onItemClickCallback;
 
-    public MovieListAdapter(ArrayList<MovieListModel> movieListModels) {
-        this.movieListModels = movieListModels;
+    public FavoriteMovieListAdapter(ArrayList<FavoriteMovieEntity> favoriteMovieEntities) {
+        this.favoriteMovieEntities = favoriteMovieEntities;
     }
 
     public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
@@ -30,29 +30,29 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
 
     @NonNull
     @Override
-    public MovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_rectangle_movie, parent, false);
+    public FavoriteMovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_horizontal_movie, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieListAdapter.ViewHolder holder, int position) {
-        MovieListModel movieListModel = movieListModels.get(position);
+    public void onBindViewHolder(@NonNull FavoriteMovieListAdapter.ViewHolder holder, int position) {
+        FavoriteMovieEntity favoriteMovie = favoriteMovieEntities.get(position);
 
         Glide.with(holder.itemView.getContext())
-                .load("https://themoviedb.org/t/p/w500" + movieListModel.getPoster_path())
+                .load("https://themoviedb.org/t/p/w500" + favoriteMovie.posterPath)
                 .placeholder(R.drawable.image_placeholder)
                 .into(holder.ivPoster);
-        holder.tvTitle.setText(movieListModel.getTitle());
-        holder.tvReleaseDate.setText(movieListModel.getRelease_date());
-        holder.tvRating.setText(Double.toString(movieListModel.getVote_average()));
+        holder.tvTitle.setText(favoriteMovie.title);
+        holder.tvReleaseDate.setText(favoriteMovie.releaseDate);
+        holder.tvRating.setText(favoriteMovie.rating);
 
-        holder.itemView.setOnClickListener(v -> onItemClickCallback.onItemClick(movieListModels.get(holder.getAdapterPosition())));
+        holder.itemView.setOnClickListener(v -> onItemClickCallback.onItemClick(favoriteMovieEntities.get(holder.getAdapterPosition())));
     }
 
     @Override
     public int getItemCount() {
-        return movieListModels.size();
+        return favoriteMovieEntities.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -69,6 +69,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
     }
 
     public interface OnItemClickCallback {
-        void onItemClick(MovieListModel movieListModel);
+        void onItemClick(FavoriteMovieEntity favoriteMovie);
     }
 }

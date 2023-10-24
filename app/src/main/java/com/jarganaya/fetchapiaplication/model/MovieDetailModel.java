@@ -2,6 +2,7 @@ package com.jarganaya.fetchapiaplication.model;
 
 public class MovieDetailModel {
     private String backdrop_path;
+    private String poster_path;
     private long id;
     private String original_title;
     private String overview;
@@ -18,6 +19,14 @@ public class MovieDetailModel {
 
     public void setBackdrop_path(String backdrop_path) {
         this.backdrop_path = backdrop_path;
+    }
+
+    public String getPoster_path() {
+        return poster_path;
+    }
+
+    public void setPoster_path(String poster_path) {
+        this.poster_path = poster_path;
     }
 
     public long getId() {
