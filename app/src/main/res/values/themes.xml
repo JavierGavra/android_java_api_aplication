@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.FetchApiAplication" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="android:statusBarColor">#2B2B2B</item>
+    </style>
+
+    <style name="Theme.FetchApiAplication" parent="Base.Theme.FetchApiAplication"/>
+
+    <style name="Theme.FetchApiAplication.DetailActivity" parent="Theme.FetchApiAplication">
+        <item name="android:statusBarColor">#46000000</item>
+    </style>
+</resources>
